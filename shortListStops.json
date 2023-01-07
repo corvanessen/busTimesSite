@@ -1,0 +1,91 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+      "properties": {
+        "nr": "4132102",
+        "linienfilter": "S70,S71",
+        "typ": "1",
+        "lbez": "Münzstr.",
+        "kbez": "MÜNZ",
+        "richtung": "einwärts"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.6196653,
+          51.9666436
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+        "properties": {
+          "nr": "4311102",
+          "linienfilter": "S20",
+          "typ": "1",
+          "lbez": "Liboristr.",
+          "kbez": "LIBO",
+          "richtung": "einwärts"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            7.6520872,
+            51.9549122
+          ]
+        },
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "typ": "1",
+          "lbez": "Goesenweg",
+          "nr": "4672201",
+          "kbez": "GSWG"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            7.5500231,
+            51.9968969
+          ]
+        },
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "nr": "4600102",
+          "typ": "1",
+          "lbez": "Rüschhausweg A",
+          "kbez": "RÜHA",
+          "richtung": "einwärts"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            7.5648069,
+            51.9739694
+          ]
+        },
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "nr": "4600101",
+          "typ": "1",
+          "lbez": "Rüschhausweg B",
+          "kbez": "RÜHB",
+          "richtung": "auswärts"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            7.5651131,
+            51.9739553
+          ]
+        },
+        "type": "Feature"
+      }
+    ]
+}
