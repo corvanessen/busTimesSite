@@ -18,9 +18,9 @@ let closestStop = 4311102;
 let closestStopNr = 0;
 let url =  " https://rest.busradar.conterra.de/prod/haltestellen/" +closestStop+"/abfahrten?sekunden="+timeRange+"&maxanzahl="+ numberOfBusses;
 
-
-
-
+let oxfordblue;
+let orangeweb;
+let platinum;
 /*
 --oxford-blue: #14213dff;
 --orange-web: #fca311ff;
@@ -46,12 +46,12 @@ async function busData() {
 }
 
 function setup() {
-  let oxfordblue=  color('rgb(20, 33, 61)');
-  let orangeweb= color('rgb(252, 163, 17)');
-  let platinum= color('rgb(229, 229, 229)');
+  oxfordblue=  color(20, 33, 61);
+  orangeweb= color(252, 163, 17);
+  platinum= color(229, 229, 229);
   
-  createCanvas(200, 200);
-  background(platinum); 
+  createCanvas(300, 200);
+  background(orangeweb); 
   textFont('Verdana'); 
   speech = new p5.Speech(voiceReady); //callback, speech synthesis object
   // speech.onLOad = voiceReady;
@@ -60,13 +60,18 @@ function setup() {
   
 }
 
-function draw() {
- 
+function draw() {  
   
-  
+  //console.log(frameCount);
+  //console.log(busTimes)
+  //console.log(updateTimes)
+  if(busTimes === undefined)
+  {
+    busData();
+  }
   if ( busTimes && updateTimes) {
 
-    background(platinum); 
+    background(orangeweb); 
       
     updateTimes = false;
     console.log(floor(frameCount/60));
@@ -82,15 +87,15 @@ function draw() {
       text(busStops.features[closestStopNr].properties.lbez, 10, 10);
         
     }
+    //noLoop();
   }  
   
   if(lat && lng && updateGPS) {
         text("Jouw positie: " + nf(lat,2,2) + " " + nf(lng,2,2), 10, height/2);
     updateGPS = false;
     for (let i=0;i<busStops.features.length;i++){
-    //console.log(busStops.features[i].geometry.coordinates);
-    distance = calcDistance(busStops.features[i].geometry.coordinates[1],busStops.features[i].geometry.coordinates[0],lat, lng);
-      //console.log(distance)
+      distance = calcDistance(busStops.features[i].geometry.coordinates[1],busStops.features[i].geometry.coordinates[0],lat, lng);
+      
       if (distance < shortDistance){
         shortDistance = distance;
         closestStopNr = i;
@@ -98,7 +103,7 @@ function draw() {
       }//if
     
     }//for
-   text(busStops.features[closestStopNr].properties.lbez, 10, 10);
+    text(busStops.features[closestStopNr].properties.lbez, 10, 10);
     updateTimes=true;
  
   }//gps stuff
@@ -113,7 +118,10 @@ function draw() {
     push()
 
     textSize(8)
+    fill(oxfordblue);
+    noStroke();
     rect(3, 177, 90, 20, 20);
+    fill(255,255,255);
     text("update in: "+ (30-(frameCount%1800)/60)+" sec",10,190)
     
     pop()
