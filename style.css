@@ -1,6 +1,6 @@
 html, body {
   font-family: Arial;
-	background-color: #FF0000;
+	background-color: #14213dff;
 	color: #FFFFFF;
 	font-size: 8pt;
 	padding: 20px;
@@ -12,3 +12,6 @@ html, body {
 canvas {
   display: block;
 }
+
+
+
