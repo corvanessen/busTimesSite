@@ -49,7 +49,7 @@ function setup() {
   oxfordblue=  color(20, 33, 61);
   orangeweb= color(252, 163, 17);
   platinum= color(229, 229, 229);
-  
+  //busData();
   createCanvas(300, 200);
   background(orangeweb); 
   textFont('Verdana'); 
@@ -60,14 +60,12 @@ function setup() {
   
 }
 
-function draw() {  
+function draw() {    
   
-  //console.log(frameCount);
-  //console.log(busTimes)
-  //console.log(updateTimes)
   if(busTimes === undefined)
   {
     busData();
+    console.log("no data until now")
   }
   if ( busTimes && updateTimes) {
 
@@ -76,22 +74,27 @@ function draw() {
     updateTimes = false;
     console.log(floor(frameCount/60));
     if (busTimes.length ===0) {
-      text("Geen bus info",10,30);
+      text("No bus info",10,30);
     }
     else {
       let nowTime = formatMinutes(new Date(Date.now()));  
       let realDepartureTime = formatMinutes(new Date(busTimes[0].tatsaechliche_abfahrtszeit*1000));
-      busString = "Het is: " + nowTime;
+      busString = "It is: " + nowTime;
       text(busString,10,40);
-      text("Bus "+busTimes[0].linienid+" komt om: " +realDepartureTime, 10,70);
+      text("Bus "+busTimes[0].linienid+" arrives at: " +realDepartureTime, 10,70);
       text(busStops.features[closestStopNr].properties.lbez, 10, 10);
-        
+      push();
+      fill(0,0,0);
+      text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), 10, height/2);
+      pop();
     }
-    //noLoop();
   }  
   
   if(lat && lng && updateGPS) {
-        text("Jouw positie: " + nf(lat,2,2) + " " + nf(lng,2,2), 10, height/2);
+    push();
+    fill(0,0,0);
+    text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), 10, height/2);
+    pop();
     updateGPS = false;
     for (let i=0;i<busStops.features.length;i++){
       distance = calcDistance(busStops.features[i].geometry.coordinates[1],busStops.features[i].geometry.coordinates[0],lat, lng);
@@ -149,18 +152,18 @@ function setPos(position) {
 
 function startSpeaking() {
     background(0,255,0);
-  }
+}
 
 function voiceReady() {
     console.log(speech.voices);
-  } 
+} 
 
 function mousePressed() {
   speech.setVoice('SpeechSynthesisVoice');
   speech.speak(busString); // say something
-  }
+}
 
 function calcDistance(lat1,lng1,lat2, lng2) {  
   let distance = sqrt((lat1-lat2)*(lat1-lat2)+(lng1-lng2)*(lng1-lng2));
   return(distance);
-  }
+}
