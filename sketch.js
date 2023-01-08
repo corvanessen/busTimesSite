@@ -1,5 +1,6 @@
 let busTimes;
-let busString
+let busString1;
+let busString2;
 let busStop = 4311102;
 //4311102 Libori einwarts
 //4672202 Goessenweg einwarts
@@ -12,8 +13,8 @@ let shortDistance =1000000;
 
 let updateTimes = true;
 let updateGPS=true;
-let speech; //15 is nederlands
-let busStops = 'shortListStops.json';
+let speech;
+let busStops = 'shortListStops.json'; //now only has a 5 stops, increasing will make it harder to find the closest
 let closestStop = 4311102;
 let closestStopNr = 0;
 let url =  " https://rest.busradar.conterra.de/prod/haltestellen/" +closestStop+"/abfahrten?sekunden="+timeRange+"&maxanzahl="+ numberOfBusses;
@@ -21,6 +22,10 @@ let url =  " https://rest.busradar.conterra.de/prod/haltestellen/" +closestStop+
 let oxfordblue;
 let orangeweb;
 let platinum;
+let paddingLeft = 10;
+let paddingTop = 30;
+let paddingText = 30;
+
 /*
 --oxford-blue: #14213dff;
 --orange-web: #fca311ff;
@@ -28,8 +33,8 @@ let platinum;
 
 function preload(){  
 
-  busStops = loadJSON(busStops)
-  //busTimes = loadJSON(url);
+  busStops = loadJSON(busStops);
+  
   if (!navigator.geolocation) {
     alert("navigator.geolocation is not available");
   }
@@ -49,8 +54,8 @@ function setup() {
   oxfordblue=  color(20, 33, 61);
   orangeweb= color(252, 163, 17);
   platinum= color(229, 229, 229);
-  //busData();
-  createCanvas(300, 200);
+  textSize(36);
+  createCanvas(400, 200);
   background(orangeweb); 
   textFont('Verdana'); 
   speech = new p5.Speech(voiceReady); //callback, speech synthesis object
@@ -74,18 +79,23 @@ function draw() {
     updateTimes = false;
     console.log(floor(frameCount/60));
     if (busTimes.length ===0) {
-      text("No bus info",10,30);
+      text("No bus info",paddingLeft,paddingTop);
+      
     }
     else {
       let nowTime = formatMinutes(new Date(Date.now()));  
       let realDepartureTime = formatMinutes(new Date(busTimes[0].tatsaechliche_abfahrtszeit*1000));
-      busString = "It is: " + nowTime;
-      text(busString,10,40);
-      text("Bus "+busTimes[0].linienid+" arrives at: " +realDepartureTime, 10,70);
-      text(busStops.features[closestStopNr].properties.lbez, 10, 10);
+
+      busString1 = "It is: " + nowTime;      
+      busString2 = "Bus "+busTimes[0].linienid+": " +realDepartureTime; 
+
+      text(busStops.features[closestStopNr].properties.lbez, paddingLeft, paddingTop+paddingText);
+      text(busString1, paddingLeft,paddingTop + 2*paddingText);
+      text(busString2, paddingLeft,paddingTop + 3*paddingText);
       push();
       fill(0,0,0);
-      text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), 10, height/2);
+      textSize(18);
+      text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), paddingLeft, paddingTop + 4*paddingText);
       pop();
     }
   }  
@@ -93,7 +103,7 @@ function draw() {
   if(lat && lng && updateGPS) {
     push();
     fill(0,0,0);
-    text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), 10, height/2);
+    text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), paddingLeft, paddingTop + 4*paddingText);
     pop();
     updateGPS = false;
     for (let i=0;i<busStops.features.length;i++){
@@ -106,7 +116,7 @@ function draw() {
       }//if
     
     }//for
-    text(busStops.features[closestStopNr].properties.lbez, 10, 10);
+    text(busStops.features[closestStopNr].properties.lbez, paddingLeft, paddingText);
     updateTimes=true;
  
   }//gps stuff
@@ -125,7 +135,7 @@ function draw() {
     noStroke();
     rect(3, 177, 90, 20, 20);
     fill(255,255,255);
-    text("update in: "+ (30-(frameCount%1800)/60)+" sec",10,190)
+    text("update in: "+ (30-(frameCount%1800)/60)+" sec",paddingLeft,190)
     
     pop()
   }
@@ -160,7 +170,8 @@ function voiceReady() {
 
 function mousePressed() {
   speech.setVoice('SpeechSynthesisVoice');
-  speech.speak(busString); // say something
+  speech.speak(busString1 + busString2); // say something
+  
 }
 
 function calcDistance(lat1,lng1,lat2, lng2) {  
