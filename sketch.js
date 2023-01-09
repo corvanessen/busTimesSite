@@ -1,5 +1,6 @@
 let busTimes;
-let busString
+let busString1;
+let busString2;
 let busStop = 4311102;
 //4311102 Libori einwarts
 //4672202 Goessenweg einwarts
@@ -12,14 +13,18 @@ let shortDistance =1000000;
 
 let updateTimes = true;
 let updateGPS=true;
-let speech; //15 is nederlands
-let busStops = 'shortListStops.json';
+let speech;
+let busStops = 'shortListStops.json'; //now only has a 5 stops, increasing will make it harder to find the closest
 let closestStop = 4311102;
 let closestStopNr = 0;
 let url =  " https://rest.busradar.conterra.de/prod/haltestellen/" +closestStop+"/abfahrten?sekunden="+timeRange+"&maxanzahl="+ numberOfBusses;
 
-
-
+let oxfordblue;
+let orangeweb;
+let platinum;
+let paddingLeft = 10;
+let paddingTop = 30;
+let paddingText = 30;
 
 /*
 --oxford-blue: #14213dff;
@@ -28,8 +33,8 @@ let url =  " https://rest.busradar.conterra.de/prod/haltestellen/" +closestStop+
 
 function preload(){  
 
-  busStops = loadJSON(busStops)
-  //busTimes = loadJSON(url);
+  busStops = loadJSON(busStops);
+  
   if (!navigator.geolocation) {
     alert("navigator.geolocation is not available");
   }
@@ -46,12 +51,12 @@ async function busData() {
 }
 
 function setup() {
-  let oxfordblue=  color('rgb(20, 33, 61)');
-  let orangeweb= color('rgb(252, 163, 17)');
-  let platinum= color('rgb(229, 229, 229)');
-  
-  createCanvas(200, 200);
-  background(platinum); 
+  oxfordblue=  color(20, 33, 61);
+  orangeweb= color(252, 163, 17);
+  platinum= color(229, 229, 229);
+  textSize(36);
+  createCanvas(400, 200);
+  background(orangeweb); 
   textFont('Verdana'); 
   speech = new p5.Speech(voiceReady); //callback, speech synthesis object
   // speech.onLOad = voiceReady;
@@ -60,37 +65,50 @@ function setup() {
   
 }
 
-function draw() {
- 
+function draw() {    
   
-  
+  if(busTimes === undefined)
+  {
+    busData();
+    console.log("no data until now")
+  }
   if ( busTimes && updateTimes) {
 
-    background(platinum); 
+    background(orangeweb); 
       
     updateTimes = false;
     console.log(floor(frameCount/60));
     if (busTimes.length ===0) {
-      text("Geen bus info",10,30);
+      text("No bus info",paddingLeft,paddingTop);
+      
     }
     else {
       let nowTime = formatMinutes(new Date(Date.now()));  
       let realDepartureTime = formatMinutes(new Date(busTimes[0].tatsaechliche_abfahrtszeit*1000));
-      busString = "Het is: " + nowTime;
-      text(busString,10,40);
-      text("Bus "+busTimes[0].linienid+" komt om: " +realDepartureTime, 10,70);
-      text(busStops.features[closestStopNr].properties.lbez, 10, 10);
-        
+
+      busString1 = "It is: " + nowTime;      
+      busString2 = "Bus "+busTimes[0].linienid+": " +realDepartureTime; 
+
+      text(busStops.features[closestStopNr].properties.lbez, paddingLeft, paddingTop+paddingText);
+      text(busString1, paddingLeft,paddingTop + 2*paddingText);
+      text(busString2, paddingLeft,paddingTop + 3*paddingText);
+      push();
+      fill(0,0,0);
+      textSize(18);
+      text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), paddingLeft, paddingTop + 4*paddingText);
+      pop();
     }
   }  
   
   if(lat && lng && updateGPS) {
-        text("Jouw positie: " + nf(lat,2,2) + " " + nf(lng,2,2), 10, height/2);
+    push();
+    fill(0,0,0);
+    text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), paddingLeft, paddingTop + 4*paddingText);
+    pop();
     updateGPS = false;
     for (let i=0;i<busStops.features.length;i++){
-    //console.log(busStops.features[i].geometry.coordinates);
-    distance = calcDistance(busStops.features[i].geometry.coordinates[1],busStops.features[i].geometry.coordinates[0],lat, lng);
-      //console.log(distance)
+      distance = calcDistance(busStops.features[i].geometry.coordinates[1],busStops.features[i].geometry.coordinates[0],lat, lng);
+      
       if (distance < shortDistance){
         shortDistance = distance;
         closestStopNr = i;
@@ -98,7 +116,7 @@ function draw() {
       }//if
     
     }//for
-   text(busStops.features[closestStopNr].properties.lbez, 10, 10);
+    text(busStops.features[closestStopNr].properties.lbez, paddingLeft, paddingText);
     updateTimes=true;
  
   }//gps stuff
@@ -113,8 +131,11 @@ function draw() {
     push()
 
     textSize(8)
+    fill(oxfordblue);
+    noStroke();
     rect(3, 177, 90, 20, 20);
-    text("update in: "+ (30-(frameCount%1800)/60)+" sec",10,190)
+    fill(255,255,255);
+    text("update in: "+ (30-(frameCount%1800)/60)+" sec",paddingLeft,190)
     
     pop()
   }
@@ -141,18 +162,19 @@ function setPos(position) {
 
 function startSpeaking() {
     background(0,255,0);
-  }
+}
 
 function voiceReady() {
     console.log(speech.voices);
-  } 
+} 
 
 function mousePressed() {
   speech.setVoice('SpeechSynthesisVoice');
-  speech.speak(busString); // say something
-  }
+  speech.speak(busString1 + busString2); // say something
+  
+}
 
 function calcDistance(lat1,lng1,lat2, lng2) {  
   let distance = sqrt((lat1-lat2)*(lat1-lat2)+(lng1-lng2)*(lng1-lng2));
   return(distance);
-  }
+}
