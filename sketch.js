@@ -102,15 +102,18 @@ function draw() {
     updateTimes = false;
     console.log(floor(frameCount/60));
     if (busTimes.length === 0) {
+      push()
+      fill(crayola)
       text("No bus info",paddingLeft,paddingTop);
-      
+      pop()
     }
     else {
       let nowTime = formatMinutes(new Date(Date.now()));  
       let realDepartureTime = formatMinutes(new Date(busTimes[0].tatsaechliche_abfahrtszeit*1000));
 
       busString1 = "It is: " + nowTime;      
-      busString2 = "Bus "+busTimes[0].linienid+": " +realDepartureTime; 
+      busString2 = "Bus "+busTimes[0].linientext+": " +realDepartureTime; 
+      console.log(busTimes[0])
       push()
       fill(crayola);
       text(busStops.features[closestStopNr].properties.lbez, paddingLeft, paddingTop+paddingText);
@@ -140,6 +143,7 @@ function draw() {
         shortDistance = distance;
         closestStopNr = i;
         closestStop = busStops.features[i].properties.nr;
+        console.log(busStops.features[i].properties)
       }//if
     
     }//for
