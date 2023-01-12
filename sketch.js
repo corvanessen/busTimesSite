@@ -22,6 +22,16 @@ let url =  " https://rest.busradar.conterra.de/prod/haltestellen/" +closestStop+
 let oxfordblue;
 let orangeweb;
 let platinum;
+let crayola;
+let crayola2;
+let apple;
+let ocean;
+let keppel;
+let viridian;
+let munsell;
+let cgblue;
+let lapislazuli;
+let yale;
 let paddingLeft = 10;
 let paddingTop = 30;
 let paddingText = 30;
@@ -54,9 +64,22 @@ function setup() {
   oxfordblue=  color(20, 33, 61);
   orangeweb= color(252, 163, 17);
   platinum= color(229, 229, 229);
+  crayola= color(217, 237, 146);
+  crayola2= color(181, 228, 140);
+  apple= color(153, 217, 140);
+  ocean= color(118, 200, 147);
+  keppel= color(82, 182, 154);
+  viridian= color(52, 160, 164);
+  munsell= color(22, 138, 173);
+  cgblue= color(26, 117, 159);
+  lapislazuli= color(30, 96, 145);
+  yale= color(24, 78, 119);
+  
+  fgColor = apple;
+  bgColor = munsell;
   textSize(36);
   createCanvas(400, 200);
-  background(orangeweb); 
+  background(bgColor); 
   textFont('Verdana'); 
   speech = new p5.Speech(voiceReady); //callback, speech synthesis object
   // speech.onLOad = voiceReady;
@@ -74,11 +97,11 @@ function draw() {
   }
   if ( busTimes && updateTimes) {
 
-    background(orangeweb); 
+    background(bgColor); 
       
     updateTimes = false;
     console.log(floor(frameCount/60));
-    if (busTimes.length ===0) {
+    if (busTimes.length === 0) {
       text("No bus info",paddingLeft,paddingTop);
       
     }
@@ -88,21 +111,25 @@ function draw() {
 
       busString1 = "It is: " + nowTime;      
       busString2 = "Bus "+busTimes[0].linienid+": " +realDepartureTime; 
-
+      push()
+      fill(crayola);
       text(busStops.features[closestStopNr].properties.lbez, paddingLeft, paddingTop+paddingText);
+      pop()
       text(busString1, paddingLeft,paddingTop + 2*paddingText);
       text(busString2, paddingLeft,paddingTop + 3*paddingText);
-      push();
-      fill(0,0,0);
-      textSize(18);
-      text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), paddingLeft, paddingTop + 4*paddingText);
-      pop();
+      if (lat && lng){
+        push();
+        fill(fgColor);
+        textSize(18);
+        text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), paddingLeft, paddingTop + 4*paddingText);
+        pop();
+      }
     }
   }  
   
   if(lat && lng && updateGPS) {
     push();
-    fill(0,0,0);
+    fill(lapislazuli);
     text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), paddingLeft, paddingTop + 4*paddingText);
     pop();
     updateGPS = false;
@@ -134,7 +161,7 @@ function draw() {
     fill(oxfordblue);
     noStroke();
     rect(3, 177, 90, 20, 20);
-    fill(255,255,255);
+    fill(crayola2);
     text("update in: "+ (30-(frameCount%1800)/60)+" sec",paddingLeft,190)
     
     pop()
@@ -161,7 +188,7 @@ function setPos(position) {
 }
 
 function startSpeaking() {
-    background(0,255,0);
+    background(ocean);
 }
 
 function voiceReady() {
