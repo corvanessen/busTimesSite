@@ -4,7 +4,6 @@
         {
       "properties": {
         "nr": "4132102",
-        "linienfilter": "S70,S71",
         "typ": "1",
         "lbez": "Münzstr.",
         "kbez": "MÜNZ",
@@ -22,7 +21,6 @@
     {
         "properties": {
           "nr": "4311102",
-          "linienfilter": "S20",
           "typ": "1",
           "lbez": "Liboristr.",
           "kbez": "LIBO",
