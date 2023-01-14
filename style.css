@@ -3,8 +3,9 @@ html, body {
 	background-color: #184e77;
 	color: #FFFFFF;
 	font-size: 8pt;
-	padding: 20px;
-  height: 300px;
+	padding: 2px;
+  height: 100%;
+  width: 100%;
 }
 
 .busdata {font-family:Roboto;}
