@@ -15,9 +15,9 @@ let updateTimes = true;
 let updateGPS=true;
 let speech;
 let busStops = 'shortListStops.json'; //now only has a 5 stops, increasing will make it harder to find the closest
-let closestStop = 4311102;
+let closestStop;// = 4311102;
 let closestStopNr = 0;
-let url =  " https://rest.busradar.conterra.de/prod/haltestellen/" +closestStop+"/abfahrten?sekunden="+timeRange+"&maxanzahl="+ numberOfBusses;
+let url;// =  " https://rest.busradar.conterra.de/prod/haltestellen/" +closestStop+"/abfahrten?sekunden="+timeRange+"&maxanzahl="+ numberOfBusses;
 
 let oxfordblue;
 let orangeweb;
@@ -59,6 +59,7 @@ async function busData() {
   let response = await fetch(url);
   busTimes = await response.json();  
   console.log(closestStop)
+  console.log(response)
 
 }
 
@@ -106,7 +107,9 @@ function draw() {
     if (busTimes.length === 0) {
       push()
       fill(crayola)
-      text("No bus info",paddingLeft,paddingTop);
+      text(busStops.features[closestStopNr].properties.lbez, paddingLeft, paddingTop+paddingText);
+
+      text("No bus info",paddingLeft,paddingTop+ 2*paddingText);
       pop()
     }
     else {
