@@ -108,7 +108,6 @@ function draw() {
       push()
       fill(crayola)
       text(busStops.features[closestStopNr].properties.lbez, paddingLeft, paddingTop+paddingText);
-
       text("No bus info",paddingLeft,paddingTop+ 2*paddingText);
       pop()
     }
@@ -140,6 +139,7 @@ function draw() {
     fill(lapislazuli);
     text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), paddingLeft, paddingTop + 4*paddingText);
     pop();
+    busData();
     updateGPS = false;
     navigator.geolocation.getCurrentPosition(setPos);
     console.log(navigator.geolocation)
