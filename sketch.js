@@ -49,6 +49,7 @@ function preload(){
     alert("navigator.geolocation is not available");
   }
   navigator.geolocation.getCurrentPosition(setPos);
+  console.log(navigator.geolocation.getCurrentPosition())
   
 }
 
@@ -57,6 +58,7 @@ async function busData() {
   url =  " https://rest.busradar.conterra.de/prod/haltestellen/" +closestStop+"/abfahrten?sekunden="+timeRange+"&maxanzahl="+ numberOfBusses;
   let response = await fetch(url);
   busTimes = await response.json();  
+  console.log(closestStop)
 
 }
 
@@ -113,7 +115,7 @@ function draw() {
 
       busString1 = "It is: " + nowTime;      
       busString2 = "Bus "+busTimes[0].linientext+": " +realDepartureTime; 
-      console.log(busTimes[0])
+      console.log(busTimes)
       push()
       fill(crayola);
       text(busStops.features[closestStopNr].properties.lbez, paddingLeft, paddingTop+paddingText);
@@ -136,6 +138,9 @@ function draw() {
     text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), paddingLeft, paddingTop + 4*paddingText);
     pop();
     updateGPS = false;
+    navigator.geolocation.getCurrentPosition(setPos);
+    console.log(navigator.geolocation)
+
     for (let i=0;i<busStops.features.length;i++){
       distance = calcDistance(busStops.features[i].geometry.coordinates[1],busStops.features[i].geometry.coordinates[0],lat, lng);
       
