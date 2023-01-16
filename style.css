@@ -1,17 +1,26 @@
-html, body {
-  font-family: Roboto;
-	background-color: #184e77;
-	color: #FFFFFF;
-	font-size: 8pt;
-	padding: 4px;
-  	height: 100%;
-  	width: 100%;
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
 }
 
+html,
+body {
+  margin: 0;
+  font-family: Roboto;
+  background-color: #184e77;
+  color: #ffffff;
+  font-size: 8pt;
+  padding: 4px;
+}
 
-.busdata {font-family:Roboto;}
+.busdata {
+  font-family: Roboto;
+}
 
 canvas {
-	width: 100% !important;
-	height: 100% !important;
-  }
+  display: block;
+  margin: 0 auto;
+  width: min(800px, 100%) !important;
+  height: min(600px, 100%) !important;
+}
