@@ -4,13 +4,18 @@
   box-sizing: inherit;
 }
 
-html,
 body {
   margin: 0;
   font-family: Roboto;
   background-color: #184e77;
   color: #ffffff;
   font-size: 8pt;
+  min-height: 100vh;
+}
+
+main {
+  display: block;
+  max-height: 100vh;
   padding: 4px;
 }
 
@@ -21,6 +26,9 @@ body {
 canvas {
   display: block;
   margin: 0 auto;
-  width: min(800px, 100%) !important;
-  height: min(600px, 100%) !important;
+  width: unset !important;
+  height: unset !important;
+  max-width: calc(min(800px, 100vw) - 8px);  
+  max-height: calc(100vh - 8px);
+  aspect-ratio: 2/1;
 }
