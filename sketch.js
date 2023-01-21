@@ -12,7 +12,7 @@ let lat;
 let shortDistance =1000000;
 
 let updateTimes = true;
-let updateGPS=true;
+let updateGPS = true;
 let speech;
 let busStops = 'shortListStops.json'; //now only has a 5 stops, increasing will make it harder to find the closest
 let closestStop;// = 4311102;
@@ -35,7 +35,8 @@ let yale;
 let paddingLeft = 10;
 let paddingTop = 30;
 let paddingText = 30;
-
+let fgColor;
+let bgColor;
 /*
 --oxford-blue: #14213dff;
 --orange-web: #fca311ff;
@@ -54,13 +55,26 @@ function preload(){
 }
 
 async function busData() {
-
   url =  " https://rest.busradar.conterra.de/prod/haltestellen/" +closestStop+"/abfahrten?sekunden="+timeRange+"&maxanzahl="+ numberOfBusses;
   let response = await fetch(url);
   busTimes = await response.json();  
-  console.log(closestStop)
-  console.log(response)
+  //console.log(closestStop);
+  //console.log(response);
+}
 
+function updateLocation(){
+  navigator.geolocation.getCurrentPosition(setPos);
+  console.log(navigator.geolocation)
+  shortDistance = 1000000;
+  for (let i=0;i<busStops.features.length;i++){
+    distance = calcDistance(busStops.features[i].geometry.coordinates[1],busStops.features[i].geometry.coordinates[0],lat, lng);    
+    if (distance < shortDistance){
+      shortDistance = distance;
+      closestStopNr = i;
+      closestStop = busStops.features[i].properties.nr;
+      console.log(busStops.features[i].properties)
+    }//if
+  }
 }
 
 function setup() {
@@ -95,21 +109,31 @@ function draw() {
   
   if(busTimes === undefined)
   {
+    updateLocation();
     busData();
-    console.log("no data until now")
+    //console.log("no data until now")
   }
+  
+  if(!busTimes)
+  {
+    updateLocation();
+    busData();
+    //console.log("fetching again");
+  }
+
   if ( busTimes && updateTimes) {
 
     background(bgColor); 
-      
-    updateTimes = false;
+    updateTimes = false;  
+    
     console.log(floor(frameCount/60));
     if (busTimes.length === 0) {
+      /*
       push()
       fill(crayola)
       text(busStops.features[closestStopNr].properties.lbez, paddingLeft, paddingTop+paddingText);
       text("No bus info",paddingLeft,paddingTop+ 2*paddingText);
-      pop()
+      pop()*/
     }
     else {
       let nowTime = formatMinutes(new Date(Date.now()));  
@@ -126,7 +150,7 @@ function draw() {
       text(busString2, paddingLeft,paddingTop + 3*paddingText);
       if (lat && lng){
         push();
-        fill(fgColor);
+        fill(lapislazuli);
         textSize(18);
         text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), paddingLeft, paddingTop + 4*paddingText);
         pop();
@@ -136,29 +160,18 @@ function draw() {
   
   if(lat && lng && updateGPS) {
     push();
+    textSize(18);
     fill(lapislazuli);
     text("Your position: " + nf(lat,2,2) + "," + nf(lng,2,2), paddingLeft, paddingTop + 4*paddingText);
     pop();
+    updateLocation();
     busData();
-    updateGPS = false;
-    navigator.geolocation.getCurrentPosition(setPos);
-    console.log(navigator.geolocation)
-
-    for (let i=0;i<busStops.features.length;i++){
-      distance = calcDistance(busStops.features[i].geometry.coordinates[1],busStops.features[i].geometry.coordinates[0],lat, lng);
-      
-      if (distance < shortDistance){
-        shortDistance = distance;
-        closestStopNr = i;
-        closestStop = busStops.features[i].properties.nr;
-        console.log(busStops.features[i].properties)
-      }//if
-    
+    updateGPS = false;    
     }//for
-    text(busStops.features[closestStopNr].properties.lbez, paddingLeft, paddingText);
-    updateTimes=true;
+  //text(busStops.features[closestStopNr].properties.lbez, paddingLeft, paddingText);
+    //updateTimes=true;
  
-  }//gps stuff
+  //gps stuff
 
   if(frameCount%1800 == 0) {
     updateTimes = true;
@@ -168,14 +181,12 @@ function draw() {
   
   if(frameCount%60 == 0) {
     push()
-
     textSize(8)
     fill(oxfordblue);
     noStroke();
     rect(3, 177, 90, 20, 20);
     fill(crayola2);
-    text("update in: "+ (30-(frameCount%1800)/60)+" sec",paddingLeft,190)
-    
+    text("update in: "+ (30-(frameCount%1800)/60)+" sec",paddingLeft,190);    
     pop()
   }
 
@@ -194,23 +205,23 @@ function setPos(position) {
   lat = position.coords.latitude;
   lng = position.coords.longitude;
   //var acc = position.coords.accuracy;
-  //var t = position.coords.timestamp;
-    
+  //var t = position.coords.timestamp;    
   console.log(lat+","+lng);  
 }
 
 function startSpeaking() {
-    background(ocean);
+  push();
+  background(ocean);
+  pop();
 }
 
 function voiceReady() {
-    console.log(speech.voices);
+  console.log(speech.voices);
 } 
 
 function mousePressed() {
   speech.setVoice('SpeechSynthesisVoice');
-  speech.speak(busString1 + busString2); // say something
-  
+  speech.speak(busString1 + busString2); // say something  
 }
 
 function calcDistance(lat1,lng1,lat2, lng2) {  
