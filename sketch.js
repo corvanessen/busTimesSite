@@ -109,16 +109,18 @@ function draw() {
   
   if(busTimes === undefined)
   {
+    console.log("bustimes undefined")
     updateLocation();
     busData();
-    //console.log("no data until now")
+    
   }
   
   if(!busTimes)
   {
+    console.log("no bustimes");
     updateLocation();
     busData();
-    //console.log("fetching again");
+    
   }
 
   if ( busTimes && updateTimes) {
